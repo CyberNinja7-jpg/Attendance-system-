@@ -263,4 +263,98 @@ class AttendanceSystem {
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
         tooltip.textContent = this.getAttribute('title');
-        tooltip.style.cssText =
+        tooltip.style.cssText = `
+            position: absolute;
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 1000;
+            white-space: nowrap;
+        `;
+        
+        document.body.appendChild(tooltip);
+        
+        const rect = this.getBoundingClientRect();
+        tooltip.style.left = rect.left + 'px';
+        tooltip.style.top = (rect.top - tooltip.offsetHeight - 5) + 'px';
+    }
+
+    hideTooltip() {
+        const tooltip = document.querySelector('.tooltip');
+        if (tooltip) tooltip.remove();
+    }
+
+    initCharts() {
+        // Initialize simple charts if needed
+        if (typeof Chart !== 'undefined') {
+            this.renderCharts();
+        }
+    }
+
+    addAnimations() {
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            @keyframes bounce {
+                0%, 20%, 53%, 80%, 100% { transform: translate(-50%, -50%) scale(1); }
+                40%, 43% { transform: translate(-50%, -50%) scale(1.1); }
+                70% { transform: translate(-50%, -50%) scale(1.05); }
+                90% { transform: translate(-50%, -50%) scale(1.02); }
+            }
+            
+            .fade-in { animation: fadeIn 0.5s ease-in; }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Utility function for debouncing
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func.apply(this, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+}
+
+// Initialize the system when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    window.attendanceSystem = new AttendanceSystem();
+    
+    // Add service worker for offline functionality (future enhancement)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('SW registered: ', registration);
+            })
+            .catch(registrationError => {
+                console.log('SW registration failed: ', registrationError);
+            });
+    }
+});
+
+// Export for module usage
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = AttendanceSystem;
+            }

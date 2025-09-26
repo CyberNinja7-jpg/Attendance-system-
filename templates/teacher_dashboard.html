@@ -1,1 +1,149 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Advanced Attendance System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>👨‍🏫 Teacher Dashboard</h1>
+            <p>Welcome back, {{ username }}! Manage your classes and track attendance.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">{{ total_students }}</span>
+                <span class="stat-label">Total Students</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ active_sessions }}</span>
+                <span class="stat-label">Active Sessions</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ today_attendance }}%</span>
+                <span class="stat-label">Today's Attendance</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ total_classes }}</span>
+                <span class="stat-label">Total Classes</span>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card fade-in">
+            <h2>🚀 Quick Actions</h2>
+            <div class="grid grid-3">
+                <a href="/generate_qr/1" class="btn">
+                    📲 Generate QR Code
+                </a>
+                <a href="/report" class="btn btn-success">
+                    📊 View Reports
+                </a>
+                <a href="/security" class="btn btn-secondary">
+                    🛡️ Security Monitor
+                </a>
+                <a href="/manage_classes" class="btn">
+                    🏫 Manage Classes
+                </a>
+                <a href="/student_list" class="btn">
+                    👥 Student List
+                </a>
+                <a href="/settings" class="btn btn-secondary">
+                    ⚙️ Settings
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card fade-in">
+            <h2>📈 Recent Activity</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Class</th>
+                            <th>Activity</th>
+                            <th>Students</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in recent_activities %}
+                        <tr>
+                            <td>{{ activity.timestamp }}</td>
+                            <td>{{ activity.class_name }}</td>
+                            <td>{{ activity.activity }}</td>
+                            <td>{{ activity.students_present }}/{{ activity.total_students }}</td>
+                            <td>
+                                <span class="{% if activity.status == 'completed' %}text-success{% else %}text-warning{% endif %}">
+                                    {{ activity.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Upcoming Classes -->
+        <div class="card fade-in">
+            <h2>🕐 Upcoming Classes</h2>
+            <div class="grid grid-2">
+                {% for class in upcoming_classes %}
+                <div class="card" style="margin: 0.5rem 0;">
+                    <h3>{{ class.name }}</h3>
+                    <p><strong>Time:</strong> {{ class.time }}</p>
+                    <p><strong>Room:</strong> {{ class.room }}</p>
+                    <p><strong>Students:</strong> {{ class.enrolled }}/{{ class.capacity }}</p>
+                    <a href="/generate_qr/{{ class.id }}" class="btn" style="margin-top: 1rem;">
+                        Start Attendance
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="card fade-in">
+            <h2>⚡ System Status</h2>
+            <div class="grid grid-3">
+                <div class="text-center">
+                    <div class="stat-number text-success">✓</div>
+                    <div class="stat-label">Database</div>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number text-success">✓</div>
+                    <div class="stat-label">Security</div>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number text-success">✓</div>
+                    <div class="stat-label">Network</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="card text-center">
+            <a href="/logout" class="btn btn-danger">🚪 Logout</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>System managed and powered by Lord rahl</p>
+            <p>Advanced Attendance System v2.0 | Secure Academic Management</p>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

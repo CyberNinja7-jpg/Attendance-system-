@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report - Advanced Attendance System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>📊 Attendance Report</h1>
+            <p>Detailed attendance analytics and reporting</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Report Filters -->
+        <div class="card">
+            <h2>🔍 Filter Report</h2>
+            <form id="reportFilter" class="grid grid-3">
+                <div class="form-group">
+                    <label class="form-label">Class</label>
+                    <select class="form-control" name="class_id">
+                        <option value="all">All Classes</option>
+                        {% for class in classes %}
+                        <option value="{{ class.id }}">{{ class.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date From</label>
+                    <input type="date" class="form-control" name="date_from">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date To</label>
+                    <input type="date" class="form-control" name="date_to">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn">Generate Report</button>
+                    <button type="button" class="btn btn-secondary" onclick="exportReport()">Export CSV</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">{{ summary.total_students }}</span>
+                <span class="stat-label">Total Students</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ summary.total_sessions }}</span>
+                <span class="stat-label">Total Sessions</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ summary.avg_attendance }}%</span>
+                <span class="stat-label">Average Attendance</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ summary.compliance_rate }}%</span>
+                <span class="stat-label">Compliance Rate</span>
+            </div>
+        </div>
+
+        <!-- Detailed Report -->
+        <div class="card">
+            <h2>📋 Detailed Attendance</h2>
+            <div class="table-responsive">
+                <table class="table" id="attendanceTable">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Full Name</th>
+                            <th>Classes Attended</th>
+                            <th>Total Classes</th>
+                            <th>Attendance Rate</th>
+                            <th>Last Activity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.id }}</td>
+                            <td>{{ student.full_name }}</td>
+                            <td>{{ student.attended }}</td>
+                            <td>{{ student.total }}</td>
+                            <td>
+                                <div class="progress" style="background: #e9ecef; height: 10px; border-radius: 5px; margin: 5px 0;">
+                                    <div class="progress-bar" style="background: {% if student.rate >= 80 %}#28a745{% elif student.rate >= 60 %}#ffc107{% else %}#dc3545{% endif %}; 
+                                        width: {{ student.rate }}%; height: 100%; border-radius: 5px;"></div>
+                                </div>
+                                <span>{{ student.rate }}%</span>
+                            </td>
+                            <td>{{ student.last_activity }}</td>
+                            <td>
+                                <span class="{% if student.rate >= 80 %}text-success{% elif student.rate >= 60 %}text-warning{% else %}text-danger{% endif %}">
+                                    {% if student.rate >= 80 %}Excellent
+                                    {% elif student.rate >= 60 %}Good
+                                    {% else %}Needs Improvement{% endif %}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="card">
+            <h2>📈 Attendance Trends</h2>
+            <div class="grid grid-2">
+                <div>
+                    <h3>Weekly Attendance</h3>
+                    <div id="weeklyChart" style="height: 300px; background: #f8f9fa; border-radius: 10px; padding: 1rem;">
+                        <!-- Chart will be rendered here -->
+                    </div>
+                </div>
+                <div>
+                    <h3>Class-wise Distribution</h3>
+                    <div id="classChart" style="height: 300px; background: #f8f9fa; border-radius: 10px; padding: 1rem;">
+                        <!-- Chart will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Options -->
+        <div class="card">
+            <h2>💾 Export Options</h2>
+            <div class="grid grid-3">
+                <button class="btn" onclick="exportPDF()">Export PDF</button>
+                <button class="btn btn-success" onclick="exportExcel()">Export Excel</button>
+                <button class="btn btn-secondary" onclick="printReport()">Print Report</button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="card text-center">
+            <a href="/teacher" class="btn">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>System managed and powered by Lord rahl</p>
+            <p>Advanced Attendance System v2.0 | Secure Academic Management</p>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+    <script>
+        function exportReport() {
+            alert('Export feature will be implemented in the next version!');
+        }
+
+        function exportPDF() {
+            alert('PDF export will be available soon!');
+        }
+
+        function exportExcel() {
+            alert('Excel export coming in v2.1!');
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        // Simple chart rendering (would be replaced with Chart.js in production)
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSimpleCharts();
+        });
+
+        function renderSimpleCharts() {
+            // This would be replaced with actual chart library
+            const weeklyChart = document.getElementById('weeklyChart');
+            const classChart = document.getElementById('classChart');
+            
+            weeklyChart.innerHTML = '<p style="text-align: center; margin-top: 120px;">📊 Weekly attendance chart will be displayed here</p>';
+            classChart.innerHTML = '<p style="text-align: center; margin-top: 120px;">📈 Class distribution chart will be displayed here</p>';
+        }
+    </script>
+</body>
+</html>

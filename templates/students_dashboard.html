@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Advanced Attendance System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🎓 Student Dashboard</h1>
+            <p>Welcome, {{ username }}! Track your attendance and class schedule.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Student Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">{{ attendance_rate }}%</span>
+                <span class="stat-label">Overall Attendance</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ classes_attended }}</span>
+                <span class="stat-label">Classes Attended</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ classes_missed }}</span>
+                <span class="stat-label">Classes Missed</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ total_classes }}</span>
+                <span class="stat-label">Total Classes</span>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card fade-in">
+            <h2>📱 Quick Actions</h2>
+            <div class="grid grid-2">
+                <a href="/scanner" class="btn">
+                    📲 Scan QR Code
+                </a>
+                <a href="/my_attendance" class="btn btn-success">
+                    📊 My Attendance
+                </a>
+                <a href="/timetable" class="btn">
+                    🕐 My Timetable
+                </a>
+                <a href="/profile" class="btn btn-secondary">
+                    👤 My Profile
+                </a>
+            </div>
+        </div>
+
+        <!-- Today's Classes -->
+        <div class="card fade-in">
+            <h2>📅 Today's Schedule</h2>
+            {% if todays_classes %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Class</th>
+                            <th>Room</th>
+                            <th>Teacher</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for class in todays_classes %}
+                        <tr>
+                            <td>{{ class.time }}</td>
+                            <td>{{ class.name }}</td>
+                            <td>{{ class.room }}</td>
+                            <td>{{ class.teacher }}</td>
+                            <td>
+                                <span class="{% if class.attended %}text-success{% else %}text-warning{% endif %}">
+                                    {{ 'Attended' if class.attended else 'Pending' }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if not class.attended %}
+                                <a href="/scanner" class="btn">Mark Attendance</a>
+                                {% else %}
+                                <span class="text-success">✓ Done</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-center">No classes scheduled for today.</p>
+            {% endif %}
+        </div>
+
+        <!-- Attendance History -->
+        <div class="card fade-in">
+            <h2>📈 Recent Attendance</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Class</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Method</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in recent_attendance %}
+                        <tr>
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.class_name }}</td>
+                            <td>{{ record.time }}</td>
+                            <td>
+                                <span class="{% if record.status == 'Present' %}text-success{% else %}text-danger{% endif %}">
+                                    {{ record.status }}
+                                </span>
+                            </td>
+                            <td>{{ record.method }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- QR Scanner Section -->
+        <div class="card fade-in">
+            <h2>🔍 Quick Attendance</h2>
+            <div class="qr-container">
+                <p>Scan the QR code displayed in your classroom to mark attendance:</p>
+                <a href="/scanner" class="btn" style="font-size: 1.2rem; padding: 15px 30px;">
+                    📲 Open QR Scanner
+                </a>
+                <div style="margin-top: 1rem;">
+                    <p><small>Make sure you're in the correct classroom before scanning.</small></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="card text-center">
+            <a href="/logout" class="btn btn-danger">🚪 Logout</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>System managed and powered by Lord rahl</p>
+            <p>Advanced Attendance System v2.0 | Secure Academic Management</p>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+  </html>

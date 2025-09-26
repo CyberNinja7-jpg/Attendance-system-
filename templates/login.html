@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 100px auto;">
+    <div class="card">
+        <h2 style="text-align: center; margin-bottom: 2rem;">🔐 System Login</h2>
+        
+        <form method="POST" action="/login">
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Username:</label>
+                <input type="text" name="username" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Password:</label>
+                <input type="password" name="password" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%;">Login</button>
+        </form>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+            <h4>Demo Accounts:</h4>
+            <p><strong>Teacher:</strong> teacher1 / teacher123</p>
+            <p><strong>Student:</strong> student1 / student123</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
